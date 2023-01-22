@@ -1,14 +1,67 @@
 ---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  
-</body>
-</html>
+
+<DefaultLayout>
+  <div class="group">
+    <div class="block"></div>
+    <div class="block"></div>
+    <div class="block"></div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  .group {
+    position: relative;
+    width: 100%;
+    height: 300px;
+  }
+
+  .block {
+    position: absolute;
+    width: 600px;
+    height: 100%;
+
+    &:nth-child(1) {
+      background: red;
+    }
+    &:nth-child(2) {
+      background: blue;
+    }
+    &:nth-child(3) {
+      background: green;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const items = document.querySelectorAll(".block");
+
+  const itemWidth = items[0].clientWidth;
+  const fullWidth = items.length * itemWidth;
+
+  const dispose = (scroll: number) => {
+    gsap.set(items, {
+      x: i => itemWidth * i + scroll,
+      modifiers: {
+        x: x => {
+          const s = (parseFloat(x) % fullWidth) - itemWidth;
+          console.log();
+          return `${s}px`;
+        },
+      },
+    });
+  };
+
+  let count = 0;
+  const render = () => {
+    requestAnimationFrame(render);
+
+    dispose(count);
+    count += 3;
+  };
+
+  render();
+</script>
