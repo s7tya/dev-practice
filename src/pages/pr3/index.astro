@@ -37,12 +37,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 </style>
 
 <script>
-  import type { parseNumber } from "@tweakpane/core";
   import { gsap } from "gsap";
 
-  const container = document.querySelector<HTMLDivElement>(".container")!;
   const groups = document.querySelectorAll<HTMLDivElement>(".group")!;
-  const blocks = document.querySelectorAll<HTMLDivElement>(".block")!;
 
   const tl = gsap.timeline();
 
