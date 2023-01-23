@@ -33,26 +33,36 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
 <script>
   import { gsap } from "gsap";
+  import { Pane } from "tweakpane";
 
   const container = document.querySelector(".container");
   const items = document.querySelectorAll(".block");
 
+  const PARAMS = {
+    gap: 10,
+    count: 0,
+  };
+
   let itemWidth = items[0].clientWidth;
-  let fullWidth = items.length * itemWidth;
+  let fullWidth = items.length * (itemWidth + PARAMS.gap);
   let screenWidth = container!.clientWidth;
 
-  const gap = 100;
-  let count = 0;
+  const pane = new Pane();
+
+  pane.addInput(PARAMS, "gap");
+  pane.addMonitor(PARAMS, "count");
 
   const resize = () => {
     itemWidth = items[0].clientWidth;
-    fullWidth = items.length * (itemWidth + gap);
+    fullWidth = items.length * (itemWidth + PARAMS.gap);
     screenWidth = container!.clientWidth;
   };
 
+  pane.on("change", val => {});
+
   const wheel = (e: WheelEvent) => {
     e.preventDefault();
-    count += e.deltaY * 0.9;
+    PARAMS.count += e.deltaY * 0.9;
   };
 
   //
@@ -63,9 +73,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
   const dispose = (scroll: number) => {
     gsap.set(items, {
-      x: (i) => i * (itemWidth + gap) + scroll,
+      x: i => i * (itemWidth + PARAMS.gap) + scroll,
       modifiers: {
-        x: (x) => {
+        x: x => {
           const s = (parseFloat(x) % (screenWidth + itemWidth)) - itemWidth;
           return `${s}px`;
         },
@@ -78,17 +88,17 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   const render = () => {
     requestAnimationFrame(render);
 
-    dispose(count);
+    dispose(PARAMS.count);
 
-    const velocityCount = count - oldCount;
+    const velocityCount = PARAMS.count - oldCount;
 
     gsap.to(items, {
       skewX: velocityCount * 0.2,
       rotate: velocityCount * 0.01,
       scale: 1 - Math.min(100, Math.abs(velocityCount)) * 0.003,
     });
-    oldCount = count;
-    count += 2;
+    oldCount = PARAMS.count;
+    PARAMS.count += 2;
   };
 
   render();

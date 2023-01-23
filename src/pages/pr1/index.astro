@@ -53,9 +53,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
   const dispose = (scroll: number) => {
     gsap.set(items, {
-      x: (i) => itemWidth * i + scroll,
+      x: i => itemWidth * i + scroll,
       modifiers: {
-        x: (x) => {
+        x: x => {
           const s = (parseFloat(x) % fullWidth) - itemWidth;
           console.log();
           return `${s}px`;

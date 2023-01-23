@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "astro": "^1.9.0",
-    "gsap": "^3.11.4"
+    "gsap": "^3.11.4",
+    "tweakpane": "^3.1.2"
   },
   "devDependencies": {
+    "@tweakpane/core": "^1.1.2",
     "sass": "^1.57.1"
   }
 }
