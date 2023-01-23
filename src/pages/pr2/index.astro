@@ -7,8 +7,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
     <div class="block"></div>
     <div class="block"></div>
     <div class="block"></div>
-    <!-- <div class="block"></div>
-    <div class="block"></div> -->
+    <!-- <div class="block"></div> -->
+    <!-- <div class="block"></div> -->
+    <!-- <div class="block"></div> -->
   </div>
 </DefaultLayout>
 
@@ -35,13 +36,14 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   import { gsap } from "gsap";
   import { Pane } from "tweakpane";
 
-  const container = document.querySelector(".container");
-  const items = document.querySelectorAll(".block");
+  const container = document.querySelector<HTMLDivElement>(".container");
+  const items = document.querySelectorAll<HTMLDivElement>(".block");
 
   const PARAMS = {
     gap: 0,
     count: 0,
     paused: false,
+    hide_overflow: true,
   };
 
   let itemWidth = items[0].clientWidth;
@@ -53,14 +55,19 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   pane.addMonitor(PARAMS, "count");
   pane.addInput(PARAMS, "gap");
   pane.addInput(PARAMS, "paused");
+  pane.addInput(PARAMS, "hide_overflow").on("change", e => {
+    if (e.value) {
+      container!.style.overflow = "hidden";
+    } else {
+      container!.style.overflow = "visible";
+    }
+  });
 
   const resize = () => {
     itemWidth = items[0].clientWidth;
     fullWidth = items.length * (itemWidth + PARAMS.gap);
     screenWidth = container!.clientWidth;
   };
-
-  pane.on("change", val => {});
 
   const wheel = (e: WheelEvent) => {
     e.preventDefault();
