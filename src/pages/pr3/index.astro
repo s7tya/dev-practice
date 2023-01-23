@@ -7,8 +7,12 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
     <div class="group">
       <div class="block"></div>
       <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
     </div>
     <div class="group">
+      <div class="block"></div>
+      <div class="block"></div>
       <div class="block"></div>
       <div class="block"></div>
     </div>
@@ -29,20 +33,16 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
       height: 300px;
       background-image: url(https://picsum.photos/600/300);
     }
-
-    &:last-child {
-      .block {
-        // background: lime;
-      }
-    }
   }
 </style>
 
 <script>
+  import type { parseNumber } from "@tweakpane/core";
   import { gsap } from "gsap";
 
   const container = document.querySelector<HTMLDivElement>(".container")!;
   const groups = document.querySelectorAll<HTMLDivElement>(".group")!;
+  const blocks = document.querySelectorAll<HTMLDivElement>(".block")!;
 
   const tl = gsap.timeline();
 
