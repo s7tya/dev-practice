@@ -39,8 +39,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   const items = document.querySelectorAll(".block");
 
   const PARAMS = {
-    gap: 10,
+    gap: 0,
     count: 0,
+    paused: false,
   };
 
   let itemWidth = items[0].clientWidth;
@@ -49,8 +50,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
   const pane = new Pane();
 
-  pane.addInput(PARAMS, "gap");
   pane.addMonitor(PARAMS, "count");
+  pane.addInput(PARAMS, "gap");
+  pane.addInput(PARAMS, "paused");
 
   const resize = () => {
     itemWidth = items[0].clientWidth;
@@ -87,6 +89,10 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
   const render = () => {
     requestAnimationFrame(render);
+
+    if (PARAMS.paused) {
+      return;
+    }
 
     dispose(PARAMS.count);
 
