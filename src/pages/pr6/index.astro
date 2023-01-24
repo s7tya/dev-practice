@@ -1,0 +1,86 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <ul>
+      <li class="works"><a href="">Works</a></li>
+      <li class="about"><a href="">About</a></li>
+      <li><a href="">Blog</a></li>
+      <li><a href="">Careers</a></li>
+      <li><a href="">Contact</a></li>
+    </ul>
+    <div class="underline"></div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  body {
+    background: #e5e5e5;
+  }
+  .container {
+    border-radius: 12px;
+    background: white;
+    padding: 40px;
+    max-width: 600px;
+    margin-inline: auto;
+    // display: flex;
+    // justify-content: center;
+  }
+
+  ul {
+    display: flex;
+    list-style: none;
+    // gap: 20px;
+  }
+
+  li {
+    padding: 2px 10px;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .underline {
+    width: 20px;
+    height: 1px;
+    background: #000;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const links = gsap.utils.toArray<HTMLElement>("ul > li")!;
+
+  const hover = (index: number) => {
+    const container = document.querySelector("ul")!;
+    const containerX = container.getBoundingClientRect().left;
+    const target = links[index];
+    const width = target.clientWidth;
+    const x = target.getBoundingClientRect().left;
+
+    gsap.to(".underline", {
+      width: width - 20,
+      x: x - containerX + 10,
+      ease: "expo.in",
+    });
+  };
+
+  links.forEach((link, index) => {
+    link.addEventListener("mouseover", () => {
+      hover(index);
+    });
+
+    link.addEventListener("mouseleave", () => {
+      hover(0);
+    });
+  });
+
+  hover(0);
+</script>
