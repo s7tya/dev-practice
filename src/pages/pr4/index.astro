@@ -64,6 +64,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   let blockWidth = blocks[0].clientWidth;
   let fullWidth = blocks.length * (blockWidth + gap);
 
+  let count = 0;
+  // let deltaY = 0;
+
   const dispose = (scroll: number) => {
     gsap.set(blocks, {
       x: i => {
@@ -88,12 +91,24 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
   window.addEventListener("resize", resize);
 
-  let count = 0;
+  // const wheel = (e: WheelEvent) => {
+  //   e.preventDefault();
+  // };
+
+  // document.addEventListener("wheel", wheel, { passive: false });
+
   const render = () => {
     requestAnimationFrame(render);
 
+    count += 2;
+
     dispose(count);
-    count += 5;
+
+    // gsap.to(blocks, {
+    //   skewX: -deltaY * 0.2,
+    //   rotate: deltaY * 0.01,
+    //   scale: 1 - Math.min(100, Math.abs(deltaY)) * 0.003,
+    // });
   };
 
   render();
