@@ -1,0 +1,203 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+
+const items = [
+  {
+    title: "タイトル",
+    imageUrl: "https://picsum.photos/600/600",
+  },
+  {
+    title: "タイトル",
+    imageUrl: "https://picsum.photos/600/600",
+  },
+  {
+    title: "タイトル",
+    imageUrl: "https://picsum.photos/600/600",
+  },
+];
+
+let currentIndex = 0;
+---
+
+<DefaultLayout>
+  <div class="container">
+    <div class="box">
+      <div class="imgWrap">
+        <img src={items[currentIndex].imageUrl} alt="" class="img" />
+      </div>
+    </div>
+    <div class="textWrap">
+      <div class="text">{items[currentIndex].title}</div>
+      <div class="text">{items[currentIndex].title}</div>
+      <div class="text">{items[currentIndex].title}</div>
+      <div class="text">{items[currentIndex].title}</div>
+    </div>
+    <div class="title">{items[currentIndex].title}</div>
+    <button
+      class="button"
+      style={{
+        position: "fixed",
+        bottom: 0,
+        fontSize: "16px",
+      }}>Next</button
+    >
+  </div>
+
+  <style lang="scss" is:global>
+    header {
+      position: absolute;
+      top: 0;
+    }
+  </style>
+
+  <style lang="scss">
+    body {
+      background: #dbd6d0;
+    }
+
+    .container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .box {
+      z-index: 100;
+      width: 50vh;
+      aspect-ratio: 1/1;
+      background: rgb(30, 76, 128);
+      position: relative;
+    }
+
+    .imgWrap {
+      position: absolute;
+      background: white;
+      height: 100%;
+      width: 100%;
+      padding: 20px;
+
+      transform: rotate(10deg);
+
+      .img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .textWrap {
+      display: flex;
+      gap: 100px;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      font-size: 10vh;
+      overflow: hidden;
+      height: 200px;
+
+      .text {
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+        position: absolute;
+        line-height: 200px;
+      }
+    }
+
+    .title {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      padding: 20px;
+      font-size: 40px;
+      font-weight: semi-bold;
+    }
+  </style>
+
+  <script>
+    import { gsap } from "gsap";
+
+    let count = 0;
+
+    // Animations
+    const next = (e: WheelEvent) => {
+      e.preventDefault();
+
+      const tl = gsap.timeline();
+
+      tl.to(".imgWrap", {
+        rotate: 90,
+        y: "-100vh",
+      });
+
+      tl.set(".imgWrap", {
+        rotate: 0,
+        y: 0,
+      });
+      tl.set(
+        ".img",
+        {
+          opacity: 0,
+        },
+        "<"
+      );
+      tl.to(
+        gsap.utils.toArray(".text"),
+        {
+          y: "-100%",
+        },
+        "<"
+      );
+      tl.set(".text", {
+        y: "100%",
+      });
+
+      tl.to(".imgWrap", {
+        rotate: 15,
+      });
+      tl.to(".img", {
+        opacity: 1,
+      });
+      tl.to(
+        ".text",
+        {
+          y: 0,
+        },
+        "<"
+      );
+    };
+
+    const dispose = (scroll: number) => {
+      const gap = 100;
+      const items = gsap.utils.toArray<HTMLDivElement>(".text");
+      const itemWidth = items[0].clientWidth;
+      const fullWidth = items.length * (itemWidth + gap);
+
+      gsap.set(items, {
+        x: i => {
+          return i * (itemWidth + gap) + scroll;
+        },
+        modifiers: {
+          x: x => {
+            const s = (parseFloat(x) % fullWidth) - itemWidth;
+            return `${s}px`;
+          },
+        },
+      });
+    };
+
+    // Listeners
+    document.addEventListener("wheel", next, { passive: false });
+
+    // Render
+    const render = () => {
+      requestAnimationFrame(render);
+
+      dispose(count);
+      count += 2;
+    };
+
+    render();
+  </script>
+</DefaultLayout>
