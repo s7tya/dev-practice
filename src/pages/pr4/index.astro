@@ -1,0 +1,81 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <div class="block">1</div>
+    <div class="block">2</div>
+    <div class="block">3</div>
+    <div class="block">4</div>
+    <div class="block">5</div>
+  </div>
+
+  <style lang="scss">
+    .container {
+      display: flex;
+      overflow: hidden;
+      width: 100%;
+      height: 300px;
+      position: relative;
+    }
+
+    .block {
+      flex-shrink: 0;
+      // width: 600px;
+      width: 60vw;
+      height: 100%;
+
+      background: pink;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+    }
+  </style>
+
+  <script>
+    import { gsap } from "gsap";
+
+    const gap = 50;
+
+    const blocks = document.querySelectorAll(".block")!;
+
+    let blockWidth = blocks[0].clientWidth;
+    let fullWidth = blocks.length * (blockWidth + gap);
+
+    const dispose = (scroll: number) => {
+      gsap.set(blocks, {
+        x: i => {
+          const s = i * (blockWidth + gap) + scroll;
+          return s;
+        },
+        modifiers: {
+          x: x => {
+            const s = (parseFloat(x) % fullWidth) - blockWidth;
+            return `${s}px`;
+          },
+        },
+      });
+    };
+
+    // resize
+
+    const resize = () => {
+      blockWidth = blocks[0].clientWidth;
+      fullWidth = blocks.length * (blockWidth + gap);
+    };
+
+    window.addEventListener("resize", resize);
+
+    let count = 0;
+    const render = () => {
+      requestAnimationFrame(render);
+
+      dispose(count);
+      count += 5;
+    };
+
+    render();
+  </script>
+</DefaultLayout>
