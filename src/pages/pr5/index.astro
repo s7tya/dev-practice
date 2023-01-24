@@ -125,22 +125,13 @@ let currentIndex = 0;
 
       const tl = gsap.timeline();
 
+      // 1. 画像が回転しながら画面外に
       tl.to(".imgWrap", {
         rotate: 90,
         y: "-100vh",
       });
 
-      tl.set(".imgWrap", {
-        rotate: 0,
-        y: 0,
-      });
-      tl.set(
-        ".img",
-        {
-          opacity: 0,
-        },
-        "<"
-      );
+      // 1. 文字が消える
       tl.to(
         gsap.utils.toArray(".text"),
         {
@@ -148,16 +139,42 @@ let currentIndex = 0;
         },
         "<"
       );
+
+      // 2. 画像の枠を画面内に戻す
+      tl.set(".imgWrap", {
+        rotate: 0,
+        y: 0,
+      });
+
+      // 2. 画像を非表示
+      tl.set(
+        ".img",
+        {
+          opacity: 0,
+        },
+        "<"
+      );
+
+      // 文字を下に隠す
       tl.set(".text", {
         y: "100%",
       });
 
+      // 画像の枠が回転
       tl.to(".imgWrap", {
         rotate: 15,
       });
-      tl.to(".img", {
-        opacity: 1,
-      });
+
+      // 画像を表示
+      tl.to(
+        ".img",
+        {
+          opacity: 1,
+        },
+        "<"
+      );
+
+      // 文字が下から出てくる
       tl.to(
         ".text",
         {
