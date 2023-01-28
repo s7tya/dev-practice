@@ -1,0 +1,116 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <ul>
+      <li class="works"><a href="">Works</a></li>
+      <li class="about"><a href="">About</a></li>
+      <li><a href="">Blog</a></li>
+      <li><a href="">Careers</a></li>
+      <li><a href="">Contact</a></li>
+    </ul>
+    <div class="underline"></div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  body {
+    background: #e5e5e5;
+  }
+  .container {
+    border-radius: 12px;
+    background: white;
+    padding: 40px;
+    max-width: 600px;
+    margin-inline: auto;
+    height: 600px;
+    // display: flex;
+    // justify-content: center;
+  }
+
+  ul {
+    display: flex;
+    list-style: none;
+    // gap: 20px;
+  }
+
+  li {
+    padding: 2px 10px;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .underline {
+    width: 20px;
+    height: 1px;
+    background: #000;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const links = gsap.utils.toArray<HTMLElement>("ul > li")!;
+
+  const container = document.querySelector("ul")!;
+  const containerMarginLeft = container.getBoundingClientRect().left;
+
+  const clamp = (min: number, n: number, max: number): number => {
+    return Math.min(Math.max(min, n), max);
+  };
+
+  const hover = (index: number) => {
+    const target = links[index];
+    const width = target.clientWidth;
+    const x = target.getBoundingClientRect().left;
+
+    gsap.to(".underline", {
+      width: width - 20,
+      x: x - containerMarginLeft + 10,
+      ease: "expo.in",
+    });
+  };
+
+  const onMouseMove = (e: MouseEvent) => {
+    const underline = document.querySelector(".underline")!;
+    // if (!isHover) {
+    const max = container.clientWidth;
+    const x = clamp(0, e.x, max);
+
+    gsap.to(underline, {
+      x: x - underline.clientWidth / 2,
+      ease: "none",
+      // ease: "expo.in",
+    });
+    // console.log(x);
+    // }
+    console.log(e.clientX);
+  };
+
+  let isHover = false;
+
+  links.forEach((link, index) => {
+    //   link.addEventListener("mouseover", () => {
+    //     hover(index);
+    //     isHover = true;
+    //     // console.log(isHover);
+    //   });
+
+    //   link.addEventListener("mouseleave", () => {
+    //     // hover(0);
+    //     isHover = false;
+    //     // console.log(isHover);
+    //   });
+
+    container.addEventListener("mousemove", onMouseMove);
+  });
+
+  hover(0);
+</script>
