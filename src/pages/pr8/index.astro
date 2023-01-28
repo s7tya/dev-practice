@@ -3,9 +3,142 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 ---
 
 <DefaultLayout>
-  <div></div>
+  <div class="container">
+    <div class="group">
+      <div class="top-square">
+        <div class="cap"></div>
+        <div class="neck"></div>
+      </div>
+      <div class="bottom-square">
+        <div class="label">
+          <div class="text-group-1">
+            <p>Practice</p>
+            <p>saikin go kaiteta</p>
+          </div>
+          <div class="text-group-2">
+            <p>No.08</p>
+            <p>Nemui nemu</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </DefaultLayout>
 
-<style lang="scss"></style>
+<style lang="scss">
+  :root {
+    --size-1: 20px;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+
+    .group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .top-square {
+        width: calc(var(--size-1) * 4);
+        height: calc(var(--size-1) * 9);
+        background: #eeeeee;
+        position: relative;
+        display: flex;
+        justify-content: center;
+
+        .cap {
+          background: #111111;
+          width: 100%;
+          height: 90%;
+          border-radius: 4px 4px 0 0;
+          position: relative;
+          z-index: 300;
+
+          &:before {
+            content: "";
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #111111;
+            height: calc(var(--size-1) * 2);
+            border-radius: 50%;
+            transform: translateY(-50%) rotateX(70deg);
+            z-index: 400;
+          }
+        }
+
+        &:before {
+          content: "";
+          position: absolute;
+          width: 90%;
+          height: 100%;
+          background: #590e0d;
+          bottom: -8%;
+          z-index: 200;
+        }
+      }
+
+      .bottom-square {
+        width: calc(var(--size-1) * 8);
+        aspect-ratio: 1 /1;
+        background: rgba(238, 238, 238, 1);
+        border-radius: 4px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .label {
+          border-radius: 8px;
+          padding: 8px;
+          background: #ffffff;
+          width: 80%;
+          height: 80%;
+          aspect-ratio: 1 / 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          z-index: 300;
+
+          .text-group-1 {
+            p:nth-child(1) {
+              font-size: calc(var(--size-1) * 0.9);
+              font-weight: bold;
+            }
+
+            p:nth-child(2) {
+              font-size: calc(var(--size-1) * 0.5);
+              opacity: 0.8;
+            }
+          }
+
+          .text-group-2 {
+            p:nth-child(1) {
+              font-size: calc(var(--size-1) * 0.5);
+            }
+
+            p:nth-child(2) {
+              font-size: calc(var(--size-1) * 0.5);
+              text-transform: uppercase;
+            }
+          }
+        }
+
+        &:before {
+          position: absolute;
+          background: #590e0d;
+          content: "";
+          width: 87%;
+          height: 87%;
+          aspect-ratio: 1/1;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+</style>
 
 <script></script>
