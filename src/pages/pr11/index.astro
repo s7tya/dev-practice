@@ -1,0 +1,123 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <button class="menu">Menu</button>
+    <div class="cursor"></div>
+  </div>
+  <div class="info">
+    <p>ref: <a href="https://cuberto.com/">https://cuberto.com/</a></p>
+  </div>
+</DefaultLayout>
+
+<style lang="scss" is:global>
+  * {
+    cursor: none;
+  }
+</style>
+
+<style lang="scss">
+  .container {
+    padding: 20px;
+  }
+
+  .menu {
+    border: none;
+    font-size: 16px;
+    padding: 20px;
+    border-radius: 9999px;
+    background: none;
+    // background: #333;
+    // color: white;
+    text-transform: uppercase;
+  }
+
+  .cursor {
+    pointer-events: none;
+    user-select: none;
+    // width: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #000000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate3d(-50%, -50%, 0);
+  }
+
+  .info {
+    padding: 20px;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const menu = document.querySelector<HTMLElement>(".menu")!;
+  let カーソルが対象の上に重なっている = false;
+
+  const lerp = (v0: number, v1: number, t: number) => {
+    return v0 * (1 - t) + v1 * t;
+  };
+
+  const onMouseMove = (イベント: MouseEvent) => {
+    const 粘度 = 0.8;
+
+    if (カーソルが対象の上に重なっている) {
+      gsap.set(".cursor", {
+        x: lerp(
+          menu.offsetLeft + menu.clientWidth / 2,
+          イベント.pageX,
+          1 - 粘度
+        ),
+        y: lerp(
+          menu.offsetTop + menu.clientHeight / 2,
+          イベント.pageY,
+          1 - 粘度
+        ),
+      });
+    } else {
+      gsap.set(".cursor", {
+        x: イベント.pageX,
+        y: イベント.pageY,
+      });
+    }
+  };
+
+  const onMouseEnter = () => {
+    カーソルが対象の上に重なっている = true;
+
+    gsap.to(".cursor", {
+      width: 80,
+      height: 80,
+      duration: 0.2,
+      zIndex: -1,
+      ease: "power1.inOut",
+    });
+
+    gsap.to(".menu", {
+      color: "white",
+    });
+  };
+
+  const onMouseLeave = () => {
+    カーソルが対象の上に重なっている = false;
+
+    gsap.set(".cursor", {
+      width: 12,
+      height: 12,
+    });
+
+    gsap.to(".menu", {
+      color: "black",
+    });
+  };
+
+  document.addEventListener("mousemove", onMouseMove, false);
+
+  menu.addEventListener("mouseenter", onMouseEnter, false);
+  menu.addEventListener("mouseleave", onMouseLeave, false);
+</script>

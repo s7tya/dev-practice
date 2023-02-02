@@ -1,0 +1,86 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <button class="button">Menu</button>
+    <div class="button">Menu</div>
+    <div class="cursor"></div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  .container {
+    padding: 20px;
+  }
+
+  .cursor {
+    // user-select: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    aspect-ratio: 1/1;
+    background: #000;
+    width: 8px;
+    border-radius: 50%;
+    transform: translate3d(-50%, -50%, 0);
+  }
+
+  .button {
+    background: #eee;
+    display: inline-block;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const buttons = document.querySelectorAll<HTMLElement>(".button");
+  let isHover = false;
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (isHover) return;
+
+    gsap.set(".cursor", {
+      width: 8,
+      x: e.pageX,
+      y: e.pageY,
+    });
+  };
+
+  const onMouseOver = (target: HTMLElement, e: MouseEvent) => {
+    console.log("hover");
+    isHover = true;
+
+    gsap.set(".cursor", {
+      width: target.clientWidth,
+      x: target.offsetLeft,
+    });
+  };
+
+  const onMouseOut = (target: HTMLElement, e: MouseEvent) => {
+    isHover = false;
+  };
+
+  document.addEventListener("mousemove", onMouseMove, false);
+
+  buttons.forEach(button => {
+    button.addEventListener(
+      "mouseover",
+      e => {
+        console.log("Hover1");
+        onMouseOver(button, e);
+      },
+      false
+    );
+
+    button.addEventListener(
+      "mouseout",
+      e => {
+        onMouseOut(button, e);
+      },
+      false
+    );
+  });
+</script>
