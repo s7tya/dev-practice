@@ -14,7 +14,7 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
 <style lang="scss" is:global>
   * {
-    cursor: none;
+    // cursor: none;
   }
 </style>
 
@@ -24,6 +24,7 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   }
 
   .menu {
+    cursor: pointer;
     border: none;
     font-size: 16px;
     padding: 20px;
@@ -67,7 +68,7 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
     const 粘度 = 0.8;
 
     if (カーソルが対象の上に重なっている) {
-      gsap.set(".cursor", {
+      gsap.to(".cursor", {
         x: lerp(
           menu.offsetLeft + menu.clientWidth / 2,
           イベント.pageX,
@@ -80,7 +81,7 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
         ),
       });
     } else {
-      gsap.set(".cursor", {
+      gsap.to(".cursor", {
         x: イベント.pageX,
         y: イベント.pageY,
       });
@@ -93,7 +94,7 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
     gsap.to(".cursor", {
       width: 80,
       height: 80,
-      duration: 0.2,
+      duration: 0.3,
       zIndex: -1,
       ease: "power1.inOut",
     });
@@ -106,9 +107,11 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
   const onMouseLeave = () => {
     カーソルが対象の上に重なっている = false;
 
-    gsap.set(".cursor", {
+    gsap.to(".cursor", {
       width: 12,
       height: 12,
+      duration: 0.3,
+      ease: "power1.inOut",
     });
 
     gsap.to(".menu", {
