@@ -1,0 +1,60 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <div class="row">
+      <div class="block">
+        <img src="https://picsum.photos/400/400" alt="" />
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  .container {
+    display: grid;
+    gap: 20px;
+    grid-auto-flow: column;
+  }
+
+  .row {
+    display: flex;
+  }
+
+  .block {
+    width: 200px;
+    height: 200px;
+    aspect-ratio: 1/1;
+    border-radius: 40px;
+    overflow: hidden;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const block = document.querySelector<HTMLElement>(".block")!;
+
+  for (let i = 0; i < 5; i++) {
+    block.after(block.cloneNode(true));
+  }
+
+  const row = document.querySelector<HTMLElement>(".row")!;
+
+  for (let i = 0; i < 5; i++) {
+    row.after(row.cloneNode(true));
+  }
+
+  const render = () => {
+    requestAnimationFrame(render);
+  };
+
+  render();
+</script>

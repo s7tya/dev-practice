@@ -1,0 +1,107 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <div class="hero">
+      <h1>Smooth Scroll Snap</h1>
+    </div>
+    <div class="dummy">
+      <h2>Dummy1</h2>
+    </div>
+    <div class="dummy">
+      <h2>Dummy2</h2>
+    </div>
+    <div class="snap">
+      <h2>Snap1</h2>
+    </div>
+    <div class="snap">
+      <h2>Snap2</h2>
+    </div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  .hero {
+    padding: 20px;
+  }
+
+  .dummy {
+    padding: 20px;
+    width: 100%;
+    height: 70vh;
+    background: #eeeeee;
+  }
+
+  .snap {
+    padding: 20px;
+    width: 100%;
+    height: 100vh;
+    background: #a7727d;
+
+    & > * {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import ScrollToPlugin from "gsap/ScrollToPlugin";
+
+  gsap.registerPlugin(ScrollToPlugin);
+
+  const snaps = document.querySelectorAll<HTMLElement>(".snap");
+
+  const getLastItem = <T>(items: T[]) => {
+    return items[items.length - 1];
+  };
+
+  const snapTo = (index: number) => {
+    console.log("snap to", index);
+    const tl = gsap.timeline();
+
+    tl.to(window, {
+      scrollTo: { y: snaps[index].offsetTop },
+      duration: 0.5,
+      ease: "power1.inOut",
+    });
+
+    tl.fromTo(
+      ".snap > *",
+      {
+        y: 50,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+      }
+    );
+  };
+
+  const callback: IntersectionObserverCallback = (entries, observer) => {
+    const intersectingEntriesIndex = entries
+      .map((entry, index) => {
+        if (entry.isIntersecting) {
+          return index;
+        }
+      })
+      .filter(entry => entry != undefined);
+
+    const lastItem = getLastItem(intersectingEntriesIndex);
+
+    if (lastItem != undefined) {
+      snapTo(lastItem);
+    }
+  };
+
+  const observer = new IntersectionObserver(callback, {
+    rootMargin: "0px",
+    threshold: 0.0,
+  });
+
+  snaps.forEach(snap => observer.observe(snap));
+</script>
