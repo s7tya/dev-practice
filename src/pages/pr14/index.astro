@@ -1,0 +1,133 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+---
+
+<DefaultLayout>
+  <div class="container">
+    <div class="info">
+      <h1>Smooth Scroll Snap</h1>
+      <p>
+        ref: <a href="https://www.d-runway.co.jp/"
+          >https://www.d-runway.co.jp/</a
+        >
+      </p>
+    </div>
+    <div class="dummy"></div>
+    <div class="dummy"></div>
+    <div class="snap-container">
+      <div class="snap">1</div>
+      <div class="snap">2</div>
+    </div>
+    <div class="dummy"></div>
+    <div class="dummy"></div>
+  </div>
+</DefaultLayout>
+
+<style lang="scss">
+  * {
+    box-sizing: border-box;
+  }
+
+  .info {
+    padding: 20px;
+  }
+
+  .dummy {
+    height: 70vh;
+    background: #eee;
+  }
+
+  .snap {
+    width: 100%;
+    height: 100vh;
+    background: pink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 10px solid white;
+    font-size: 40px;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import ScrollToPlugin from "gsap/ScrollToPlugin";
+
+  gsap.registerPlugin(ScrollToPlugin);
+
+  const snapContainer = document.querySelector<HTMLElement>(".snap-container")!;
+  const snapElements = document.querySelectorAll<HTMLElement>(".snap");
+
+  let isInView = false;
+
+  const snapTo = (indexToScroll: number) => {
+    if (indexToScroll == -1 || !snapElements[indexToScroll]) return;
+
+    if (snapElements[indexToScroll].offsetTop) {
+      gsap.to(window, {
+        scrollTo: snapElements[indexToScroll].offsetTop,
+        duration: 0.5,
+        ease: "power1.inOut",
+      });
+    }
+  };
+
+  const onCallback: IntersectionObserverCallback = (entries, observer) => {
+    if (entries.filter(entry => entry.isIntersecting).length > 0) {
+      isInView = true;
+      // snapTo(0);
+    } else {
+      isInView = false;
+    }
+  };
+
+  const snapContainerObserver = new IntersectionObserver(onCallback, {
+    rootMargin: "0px",
+    threshold: 0.0,
+  });
+
+  snapContainerObserver.observe(snapContainer);
+
+  const onWheel = (e: WheelEvent) => {
+    if (!isInView) return;
+
+    // スナップするセクションよりも上に戻ろうとしているときにスナップしないように
+    if (e.deltaY < 0 && e.pageY < snapElements[0].offsetTop) {
+      return;
+    }
+
+    // スナップするセクションより下に行こうとしているときにスナップしないように
+    if (
+      e.deltaY > 0 &&
+      e.pageY >
+        snapElements[snapElements.length - 1].offsetTop +
+          snapElements[snapElements.length - 1].clientHeight
+    ) {
+      return;
+    }
+
+    let currentIndex = -1;
+
+    snapElements.forEach((snapElement, index) => {
+      if (e.pageY > snapElement.offsetTop) {
+        currentIndex = index;
+      }
+    });
+
+    if (
+      e.pageY >
+      snapElements[snapElements.length - 1].offsetTop +
+        snapElements[snapElements.length - 1].clientHeight
+    ) {
+      currentIndex = snapElements.length + 1;
+    }
+
+    if (e.deltaY > 0) {
+      snapTo(currentIndex + 1);
+    } else {
+      snapTo(currentIndex - 1);
+    }
+  };
+
+  window.addEventListener("wheel", onWheel, false);
+</script>
